@@ -1,0 +1,455 @@
+#Name: StarDrifter1
+#Date: 2017-08-19
+#Description: Text-based fantasy game.
+
+
+import pygame, sys, random, time, math, copy, textwrap
+#import pycurse
+from random import randint
+from pygame.locals import *
+#win = pygcurse.PygcurseWindow(40, 25)
+#win.autoblit = False
+
+xoffset = 1
+yoffset = 1
+mousex = mousey = 0
+
+#------------------------------------------------------------------------------------
+#Character classes
+class Character:
+  def __init__(self):
+    self.name = ""
+    self.health = 1
+    self.health_max = 1
+  def do_damage(self, enemy):
+    damage = min(
+        max(randint(0, self.health) - randint(0, enemy.health), 0),
+        enemy.health)
+    enemy.health = enemy.health - damage
+    if damage == 0: print "%s evades %s's attack." % (enemy.name, self.name)
+    else: print "%s hurts %s!" % (self.name, enemy.name)
+    return enemy.health <= 0
+ 
+#for leveling see hero profile near command prompts
+
+
+#NPC classes--------------------------------------------------------------------------
+class Wizard(Character):
+  def __init__(self, player):
+    Character.__init__(self)
+    self.name = 'Zedd'
+    self.health = randint(1, player.health)
+
+class Merchant(Character):
+  def __init__(self, player):
+    Character.__init__(self)
+    self.name = 'Merchant'
+    self.health = randint(1, player.health)
+
+
+#Enemies
+#Enemy Superclasses-------------------------------------------------------------------
+class Enemy:
+    def __init__(self, name, hp, damage):
+        self.name = name
+        self.hp = hp
+        self.damage = damage
+ 
+    def is_alive(self):
+        return self.hp > 0
+
+#Enemy sub-classes:
+
+class Rat(Enemy):
+    def __init__(self):
+        super().__init__(name="Rat", hp=10, damage=randint(2,5))
+
+class Bat(Enemy):
+    def __init__(self):
+        super().__init__(name="Bat", hp=10, damage=randint(4,5))
+
+class Wolf(Enemy):
+    def __init__(self):
+        super().__init__(name="Wolf", hp=20, damage=randint(5,10))
+
+class Thief(Enemy):
+    def __init__(self):
+        super().__init__(name="Rat", hp=10, damage=randint(1,17))
+
+class Gnome(Enemy):
+    def __init__(self):
+        super().__init__(name="Rat", hp=10, damage=randint(7,11))
+
+class Ghost(Character):
+    def __init__(self):
+        super().__init__(name="Ghost", hp=30, damage=randit(10,21))
+
+class Cave_Spider(Character):
+    def __init__(self):
+        super().__init__(name="Cave Spider", hp=30, damage=randit(14,28))
+
+
+#Enemy AI?? Superclass
+
+#AI: setup
+
+#AI: main
+
+#AI: counter
+
+#perhaps use overview AI off screen?
+
+
+
+#Item classes--------------------------------------------------------------------------
+#Basic item Superclass
+class Item():
+    def __init__(self, name, description, value):
+        self.name = name
+        self.description = description
+        self.value = value
+ 
+    def __str__(self):
+        return "{}\n=====\n{}\nValue: {}\n".format(self.name, self.description, self.value)
+
+#Item subclasses
+class silver(Item):
+    def __init__(self, amt):
+        self.amt = amt
+        super().__init__(name="silver",
+                         description="small silver ingots".format(str(self.amt)),
+                         value=self.amt)
+
+class Map(Item):
+    def __init__(self, amt):
+        self.amt = amt
+        super().__init__(name="silver",
+                         description="small silver ingots".format(str(self.amt)),
+                         value=self.amt)
+
+#Potions
+class Small_potion(Item):
+    def __init__(self, name, description, value):
+        self.heal = heal
+        super().__init__(name, description, value)
+ 
+    def __str__(self):
+        return "{}\n=====\n{}\nValue: {}\nHeal: {}".format(self.name, self.heal, self.value, self.description)
+
+
+
+#Weapon & armor classes-------------------------------------------------------------
+#Weapon superclass
+
+#put generic categories etc in superclass (weapon, armor). 
+class Weapon(Item):
+    def __init__(self, name, description, damge, value):
+        self.damage = damage
+        super().__init__(name, description, value)
+ 
+    def __str__(self):
+        return "{}\n=====\n{}\nValue: {}\nDamage: {}".format(self.name, self.damage, self.value, self.description)
+
+
+#Weapon subclasses
+class knife(Weapon):
+    def __init__(self):
+        super().__init__(name="Dagger", damage=6, value=5, description="A small knife with beautiful engravings. It's very sharp.")
+
+class sword(Weapon):
+    def __init__(self):
+        super().__init__(name="Dagger", damage=6, value=5, description="A finely smithed sword with a classy hilt and guard.")
+
+
+
+#GameState (superclass) -------------------------------------------------------------
+#should be able to use this to go "into battle" etc.
+#Each type of town, level, overworld map, battle, is a subclass of this superclass
+
+
+
+
+
+
+
+
+#Interaction & Gameplay---------------------------------------------------------------------
+#Hero profile & Command definitions
+
+lvl=1
+exp=0
+lvlnext=25
+
+print ("Level:", lvl)
+print ("Exp:", exp)
+print ("Next:", lvlnext)
+
+while exp >= lvlnext:
+    lvl+=1
+    exp =exp-lvlnext
+    lvlnext = round(lvlnext * 1.5)
+
+
+class Player(Character):
+  def __init__(self):
+    Character.__init__(self)
+    self.state = 'normal'
+    self.health = 25
+    self.health_max = 25
+    self.skill_pts = 10
+    self.silver = 0
+    self.exp = exp
+    self.lvl = 1
+
+#Player skills
+
+#define skill lists here?
+    
+
+
+
+
+#Player commands
+  def help(self): print Commands.keys()
+
+  def status(self): 
+    print "Sarah's health: %d/%d" % (self.health, self.health_max) 
+    print "Sarah's Skill Pts: %d" % (self.skill_pts)
+    print "Sarah's silver: %d" % (self.silver)
+
+  #def yes(self): 
+
+  #def no(self):
+
+  #def enter(self): 
+
+  #def exit(self):
+
+  #def leave(self):
+    #if 
+
+  #def left(self):
+
+  #def right(self):
+
+  #def forward(self):
+
+  #def back(self):
+
+  #def travel(self):
+
+  #def search(self):
+ 
+  def explore(self):
+    if self.state != 'normal':
+      print "%s is too busy right now!" % self.name
+      self.enemy_attacks()
+    else:
+      print "%s explores the damp cavern." % self.name
+      if randint(0, 1):
+        self.enemy = Enemy(self)
+        print "%s encounters %s!" % (self.name, self.enemy.name)
+        self.state = 'fight'
+      else:
+        if randint(0, 1): self.tired()
+
+
+  def rest(self):
+    if self.state != 'normal': print "%s not tired!" % self.name; self.enemy_attacks()
+    else:
+      print "%s rests." % self.name
+      if randint(0, 4):
+        self.enemy = Enemy(self)
+        print "%s is awakened by %s!" % (self.name, self.enemy.name)
+        self.state = 'fight'
+        self.enemy_attacks()
+      else:
+        if self.health < self.health_max:
+          self.health = self.health + 1
+        else: print "%s slept too much." % self.name; self.health = self.health - 1
+
+#----Battle sequences----------------------------------------
+  def run(self):
+    if self.state != 'fight': print "%s runs in circles for a while." % self.name; self.tired()
+    else:
+      if randint(1, self.health + 5) > randint(1, self.enemy.health):
+        print "%s tries to run from %s." % (self.name, self.enemy.name)
+        self.enemy = None
+        self.state = 'normal'
+      else: print "%s couldn't escape from %s!" % (self.name, self.enemy.name); self.enemy_attacks()
+
+  def attack(self):
+    if self.state != 'fight': print "%s misses." % self.name; self.tired()
+    else:
+      if self.do_damage(self.enemy):
+        print "%s hits %s!" % (self.name, self.enemy.name)
+        self.enemy = None
+        self.state = 'normal'
+        if randint(0, self.health) < 10:
+          self.health = self.health + 1
+          self.health_max = self.health_max + 1
+          print "%s feels stronger!" % self.name
+      else: self.enemy_attacks()
+
+  def enemy_attacks(self):
+    if self.enemy.do_damage(self): print "%s was killed by %s!!!\nThe End" %(self.name, self.enemy.name)
+
+  def skill(self):
+    self.skill1 = crosscut
+    self.skill2 = thrust
+    self.state = 'fight' 
+       #print list =(crosscut, thrust)
+        #working on making a skills mnu here...grrr
+
+
+         #if input = "crosscut"
+          #  def attack(self):
+              #if self.state != 'fight': print "%s misses." % self.name; self.tired()
+              #else:
+                #if self.do_damage(self.enemy):
+                 #print "%s hits %s!" % (self.name, self.enemy.name)
+                  #self.enemy = None
+                  #self.state = 'normal'
+                 
+              #else: self.enemy_attacks()
+
+         #else
+            #if input = "thrust"
+              #def attack(self):
+                #if self.state = 'fi
+
+           #if self.do_damage(self.enemy):
+            #print "%s hits %s!" % (self.name, self.enemy.name)
+            #self.enemy = None
+            #self.state = 'normal'
+            #if randint(0, self.health) < 10:
+             #self.health = self.health + 1
+             #self.health_max = self.health_max + 1
+              #print "%s feels stronger!" % self.name
+         #else: self.enemy_attacks()
+
+  #def guard(self):
+
+  #def potion(self):
+
+  def quit(self):
+    print "%s can't find the way back home, and dies of starvation.\nThe End" % self.name
+    self.health = 0
+
+  
+#defined self states-----------------
+  def tired(self):
+    print "%s feels tired." % self.name
+    self.health = max(1, self.health - 1)
+
+
+
+#Storyline-------------------------------------------------------------------------
+
+p = Player()
+p.name = ("Sarah")
+
+
+def displayintro():
+    print "Sarah's Quest!"
+    print "You are a young orphan boy apprenticing under Zedd the wizard."
+    print "You must prove your worth if he is to teach you."
+    print ""
+
+time.sleep (2) 
+print "(type 'help' to get a list of actions)\n"
+time.sleep (4)
+print "Wake up Sarah"
+time.sleep (3)
+print "Come on,come on, wake up."
+time.sleep (2)
+print "You finally wake up"
+#print "% wakes up" % p.name (see if can't get this to work)
+   
+
+Wizard = raw_input("Wizard: I need you to find a blue mushroom in the mountain cavern northwest of town. Could you do that for me %s?") % p.name
+def choosequest():
+    quest=""
+    quest = input("Will you help the wizard? (yes or no): ")
+    if "yes": print "Oh good. Here, take this knife, backpack, and map. You will need them."
+    else:
+        print "...well, then I have no use of you. Be gone from my home." 
+        print "% wanders back to town in search of a new vocation, but is unable to find a apprenticeship." % p.name
+        print "% dies from starvation in a ditch and noone misses him..." % p.name 
+        print "% starved to death.\nThe End" % p.name
+
+#You leave the wizards hut on your quest.
+
+    print "You exit the wizards hut and walk the trail to town."
+    print "To the West the trail continues to the mountains."
+    print "To the South there is the town of Ravenfell."
+    print ""
+
+
+def choosepath():
+    path=""
+    while path != "1" and path != "2":
+        path = input ("What will you do? (1=go south or 2=go north): ")
+        if input ("1"):
+           print "You make your way to Ravenfell."
+        else:
+           if input ("2"):
+             print "You da boss hoss, mountains it is. Who needs supplies."
+           else:
+             print "Huh?"
+
+    return path
+
+#above example of controlled input validation
+
+#if you wanted to insert randomness to correct decision use: 
+#correctpath = random.randint(1,2)
+
+displayintro()
+choosepath()
+
+
+
+#Command section----------------------------------------------------------------------
+Commands = {
+  'help': Player.help,
+  'status': Player.status,
+  'yes': Player.yes,
+  'no': Player.no,
+  'enter': Player.enter,
+  'exit': Player.exit,
+  'leave': Player.exit,
+  'left': Player.left,
+  'right': Player.right,
+  'forward': Player.forward,
+  'back': Player.back,
+  'travel': Player.travel,
+  'search': Player.search,
+  'explore': Player.explore,
+  'rest': Player.rest,
+  'run': Player.run,
+  'attack': Player.attack,
+  'skill': Player.skill,
+  'guard': Player.guard,
+  'potion': Player.potion,
+  'quit game': Player.quit,
+  }
+ 
+
+
+#Background commands?--------------------------------------------------------------
+ 
+while(p.health > 0):
+  line = raw_input("> ")
+  args = line.split()
+  if len(args) > 0:
+    commandFound = False
+    for c in Commands.keys():
+      if args[0] == c[:len(args[0])]:
+        Commands[c](p)
+        commandFound = True
+        break
+    if not commandFound:
+      print "%s doesn't understand the suggestion." % p.name
+
+
