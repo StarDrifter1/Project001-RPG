@@ -1,0 +1,67 @@
+Author: StarDrifter
+
+Data files for game:
+#Note: All listed are (.py) type files and have equivalent (.pyc) pycurser? files
+
+#Folders:
+1. Components: 
+    attack - incl: Fire attack fx, image lists for fx, fire-explosion update.
+    attackitems - incl: weapons (ex: sword), sword animation image list, draw sprite to surface, sprite showing damage infliction, sprites surface?, position, fade in/out animation.
+    _init_.py - (????)
+    person - sets base class for all world character NPCs, lists dictionary of images for sprite sheet, returns dictionary of image lists for animations, returns dictionary of all state methods, dic: x, y, velociites set to direction keys, sprite updates, blocker and collision settings, pygame coordinates -> tile coordinate conversions, list recs to limit sprite wandering, all sorts of shit I'd put somewhere else...
+    portal - 
+    textbox - 
+
+2. Pytmx:
+    constants - 
+    _init_ - 
+    pytmx - 
+    tmxloader - 
+    utils - 
+
+3. States:
+    Battle - 
+    credits - 
+    death - 
+    _init_ - 
+    levels - 
+    main_menu - 
+    player_menu - 
+    shop - 
+
+
+#free (not confined to folder) python Files: - Contains Listings
+BattleGUI - 
+
+Collision - 
+
+Constants -
+
+_init_ - ? (this has to be in every folder, why? assuming it links/makes library 
+available?-lookup)
+
+main -
+
+menuGUI -
+
+Observer -
+
+Setup -
+
+ShopGUI -
+
+TileRender - 
+
+Tools - 
+
+
+#Look into a good linux python debugger program to run scripts through.
+
+# End game goals is for an RPG with 3 towns, 2 dungeons, one main quest, 2 side quests, a world map, 4 shop types, 3 characters, 20 NPCs, 3rd person battles(PSIV style), one vehicle (boat)
+
+# 3 towns incl: Main(lg), 2nd (small) - near via short trail, and another across small sea (med).
+
+
+#4 shop types incl: (Blacksmiths(sword, armor option), and apothecary(potions, magic), bakery (cheaper/less effective health restoration alternatives-bread, pastry, etc) and bar (illicit activities and items)
+
+#
